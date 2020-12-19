@@ -5,8 +5,13 @@ const dotenv = require ('dotenv');
 // middleware
 dotenv.config ({path: './config/config.env'});
 
+// routes
+const users = require('./routes/UserRoutes');
+
 // init of express app
 const app = express ();
+
+app.use('/api/v1/users', users);
 
 app.get ('/', (req, res) => {
   res.send ('Hello World!');
