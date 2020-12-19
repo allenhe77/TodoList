@@ -1,11 +1,20 @@
-const express = require('express')
-const app = express()
-const port = 3117
+// Third Party Packages
+const express = require ('express');
+const dotenv = require ('dotenv');
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+// middleware
+dotenv.config ({path: './config/config.env'});
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-})
+// init of express app
+const app = express ();
+
+app.get ('/', (req, res) => {
+  res.send ('Hello World!');
+});
+
+// Port Env
+const port = process.env.PORT || 3000;
+
+app.listen (port, () => {
+  console.log (`Example app listening at http://localhost:${port}`);
+});
