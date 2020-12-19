@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import User from "./User"
+const mongoose = require('mongoose');
+const User = require('./User');
 
 const {Schema} = mongoose;
 
@@ -17,7 +17,7 @@ const taskSchema = new Schema({
     },
     owner:{
         type:Schema.Types.ObjectId,
-        ref:User,
+        ref:'User',
         required:true
     }
 
@@ -25,3 +25,5 @@ const taskSchema = new Schema({
 })
 
 const Task = mongoose.model("Task",taskSchema)
+
+exports.Task = Task;

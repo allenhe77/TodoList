@@ -1,5 +1,5 @@
-import mongoose, { isValidObjectId } from "mongoose";
-import Task from "./Task"
+const mongoose = require('mongoose');
+const Task = require('./Task');
 
 const {Schema} = mongoose;
 
@@ -13,13 +13,11 @@ const userSchema = new Schema({
 
     tasks:[{
         type:Schema.Types.ObjectId,
-        ref:Task,
+        ref:'Task',
         required:false
     }]
-
-
-
-
 })
 
 const User = mongoose.model("User",userSchema)
+
+exports.User = User;
