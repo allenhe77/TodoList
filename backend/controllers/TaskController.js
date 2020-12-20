@@ -3,23 +3,28 @@ const { Task } = require('../models/Task');
 const { User } = require('../models/User');
 
 exports.tasks_get_all_from_user = async (req, res, next) => {
-    await Task
-            .find({_id: req.params.id })
-            .sort('title')
+    await User
+            .findById({_id: req.params.id })
+            .select('tasks')
             .lean()
             .exec((err, tasks) => {
                 if(err) return next(err);
-                res.status(200).json(task);
+                res.status(200).json(tasks);
             });
 };
 
 exports.tasks_create_for_user = async(req, res, next) => {
-    let user = await User
-                    .findbyId(req.body.ownerId)
-                    .lean()
-                    .exec((err) => {
-                        if(err) return next(err);
-                    });
+    let user;
+    try {
+        user = await (await User.findById(req.params.id)).execPopulate();
+        if(user == null) {
+            throw new Error("Cannot find user");
+        }
+    } catch (err) {
+        next(err);
+    }
+
+    console.log(user);
     
     let task = new Task({
         title: req.body.title,
@@ -29,8 +34,12 @@ exports.tasks_create_for_user = async(req, res, next) => {
         }
     });
 
-    await task.save()
-            .lean()
+    user.tasks.push({task});
+    user = await user.save();
+    console.log(user);
+    
+
+    task.save()
             .then(savedTask => res.status(200).json(savedTask))
             .catch((err) => next(err));
 };
