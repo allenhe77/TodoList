@@ -5,12 +5,8 @@ router.get('/', userController.user_get_all);
 
 router.post('/', userController.user_create_user);
 
-router.put('/', async (req, res) => {
+router.put('/:id', userController.user_edit_user_name);
 
-});
-
-router.delete('/', async (req, res) => {
-
-});
+router.delete('/:id', userController.user_delete_user)
 
 module.exports = router;

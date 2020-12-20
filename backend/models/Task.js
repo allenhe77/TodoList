@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const User = require('./User');
 
 const {Schema} = mongoose;
 
@@ -10,20 +9,31 @@ const taskSchema = new Schema({
         maxlength:50
     },
 
-    createdDate:Date,
+    createdDate:{
+        type: Date,
+        required:true,
+        default: Date.now
+    },
+
     completed: {
         type:Boolean,
         required:true
     },
+
     owner:{
-        type:Schema.Types.ObjectId,
-        ref:'User',
-        required:true
-    }
-
-
-})
+        required: true,
+        type: new mongoose.Schema({
+            name: {
+                type:String,
+                required:true,
+                minlength:4,
+                maxlength:50
+            }
+        }),
+    },
+});
 
 const Task = mongoose.model("Task",taskSchema)
 
 exports.Task = Task;
+exports.taskSchema = taskSchema;
