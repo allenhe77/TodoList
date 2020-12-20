@@ -17,7 +17,8 @@ const taskSchema = new Schema({
 
     completed: {
         type:Boolean,
-        required:true
+        required:true,
+        default: false
     },
 
     owner:{

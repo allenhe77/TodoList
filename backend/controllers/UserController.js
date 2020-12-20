@@ -15,7 +15,6 @@ exports.user_get_all = async (req, res, next) => {
 exports.user_create_user = async (req, res, next ) => {
     let newUser = new User(_.pick(req.body, ['name']));
     await newUser.save()
-                .lean()
                 .then(savedUser => res.status(200).json(savedUser))
                 .catch((err) => next(err));
 };
