@@ -1,5 +1,4 @@
-import mongoose from "mongoose";
-import User from "./User"
+const mongoose = require('mongoose');
 
 const {Schema} = mongoose;
 
@@ -10,18 +9,32 @@ const taskSchema = new Schema({
         maxlength:50
     },
 
-    createdDate:Date,
+    createdDate:{
+        type: Date,
+        required:true,
+        default: Date.now
+    },
+
     completed: {
         type:Boolean,
-        required:true
+        required:true,
+        default: false
     },
+
     owner:{
-        type:Schema.Types.ObjectId,
-        ref:User,
-        required:true
-    }
-
-
-})
+        required: true,
+        type: new mongoose.Schema({
+            name: {
+                type:String,
+                required:true,
+                minlength:4,
+                maxlength:50
+            }
+        }),
+    },
+});
 
 const Task = mongoose.model("Task",taskSchema)
+
+exports.Task = Task;
+exports.taskSchema = taskSchema;
