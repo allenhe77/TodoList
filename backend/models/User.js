@@ -11,7 +11,18 @@ const userSchema = new Schema({
         maxlength:50
     },
 
-    tasks:[taskSchema]
+    tasks:[{
+        taskBody: String,
+        completed:{
+            type: Boolean,
+            default:false,
+        },
+        
+        task_ref: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Tasks'
+        }
+    }]
 });
 
 const User = mongoose.model("User",userSchema)

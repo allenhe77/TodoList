@@ -3,10 +3,9 @@ const mongoose = require('mongoose');
 const {Schema} = mongoose;
 
 const taskSchema = new Schema({
-    title: {
+    taskBody: {
         type:String,
         required:true,
-        maxlength:50
     },
 
     createdDate:{
@@ -21,15 +20,14 @@ const taskSchema = new Schema({
         default: false
     },
 
-    owner:{
-        required: true,
+    author:{
+        required: [true, 'Missing Owner Name...'],
         type: new mongoose.Schema({
-            name: {
-                type:String,
-                required:true,
-                minlength:4,
-                maxlength:50
-            }
+            user_ref:{
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Users'
+            },
+            name: String,
         }),
     },
 });
