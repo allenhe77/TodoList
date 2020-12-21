@@ -10,8 +10,6 @@ const userSchema = new Schema({
         minlength:4,
         maxlength:50
     },
-
-    tasks:[taskSchema]
 });
 
 const User = mongoose.model("User",userSchema)

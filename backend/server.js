@@ -9,6 +9,7 @@ dotenv.config ({path: './config/config.env'});
 
 // routes
 const users = require('./routes/UserRoutes');
+const tasks = require('./routes/TaskRouter');
 
 // init of express app
 const app = express ();
@@ -27,6 +28,7 @@ app.use((err, req, res, next) => {
 
 // app routes
 app.use('/api/v1/users', users);
+app.use('/api/v1/users/tasks', tasks);
 
 // middleware
 //src: https://medium.com/@SigniorGratiano/express-error-handling-674bfdd86139

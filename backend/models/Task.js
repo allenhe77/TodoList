@@ -4,10 +4,11 @@ const {Schema} = mongoose;
 
 const taskSchema = new Schema({
     title: {
-        type:String,
-        required:true,
-        maxlength:50
+        type: String,
+        default: 'Untitled'
     },
+
+    content: String,
 
     createdDate:{
         type: Date,
@@ -21,16 +22,10 @@ const taskSchema = new Schema({
         default: false
     },
 
-    owner:{
-        required: true,
-        type: new mongoose.Schema({
-            name: {
-                type:String,
-                required:true,
-                minlength:4,
-                maxlength:50
-            }
-        }),
+    author:{
+        required: [true, 'Author missing, please provide author of this task...'],
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     },
 });
 
