@@ -23,14 +23,9 @@ const taskSchema = new Schema({
     },
 
     author:{
-        required: [true, 'Missing Owner Name...'],
-        type: new mongoose.Schema({
-            user_ref:{
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Users'
-            },
-            name: String,
-        }),
+        required: [true, 'Author missing, please provide author of this task...'],
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     },
 });
 
