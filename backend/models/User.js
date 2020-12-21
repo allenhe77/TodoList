@@ -12,7 +12,7 @@ const userSchema = new Schema({
     },
 
     tasks:[{
-        taskBody: String,
+        title: String,
         completed:{
             type: Boolean,
             default:false,

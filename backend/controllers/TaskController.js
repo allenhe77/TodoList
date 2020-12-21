@@ -13,38 +13,36 @@ exports.getAllUserTasks = async (req, res, next) => {
 };
 
 exports.createTaskForUser = async (req, res, next) => {
+    // TODO: verify user exists could be a middleware
     let user;
     try {
         user = await User.findById(req.params.id);
-        if(user == null) {
+        if(user === undefined) {
             throw new Error("Cannot find user");
         }
     } catch (err) {
         return next(err);
     }
-
-    console.log(user.name);
-    console.log(user._id);
     
     let task = new Task({
-        taskBody: req.body.taskBody,
+        title: req.body.title,
+        content: req.body.content,
         author: {
             user_ref: user._id,
             name: user.name
         }
     });
 
-    console.log(task);
+    console.log(task._id);
 
-    
+    // TO-DO: Implement transaction
     user.tasks.push({
-        taskBody: task.taskBody,
+        title: task.title,
         task_ref: task._id
     });
-    user = await user.save();
-    console.log(user);
-    
 
+    user = await user.save();
+    
     task.save()
             .then(savedTask => res.status(200).json(savedTask))
             .catch((err) => next(err));
@@ -54,27 +52,10 @@ exports.deleteTaskFromUser = async (req, res, next) => {
 
     await User.findByIdAndUpdate(
         req.params.id,
-        {$pull: {"tasks": {task_ref:req.body.task_ref}}
-    }).exec((err, user) => {
-        if(err) return next(err);
-    })
-
-    // let user;
-    // try {
-    //     user = await User.findById(req.params.id);
-    //     if(user == null) {
-    //         throw new Error("Cannot find user");
-    //     }
-    // } catch (err) {
-    //     return next(err);
-    // }
-
-    // // verify task exists for user
-    // if(!user.tasks.find(task => task.task_ref === req.body.task_ref) === undefined){
-    //     return next(new Error('Requested task does not exist for user!'));
-    // } else {
-        
-    // }
+        {$pull: {'tasks': {task_ref:req.body.task_ref}}})
+        .exec((err, user) => {
+            if(err) return next(err);
+        });
 
     await Task
             .findByIdAndRemove(req.body.task_ref)
@@ -82,5 +63,34 @@ exports.deleteTaskFromUser = async (req, res, next) => {
             .exec((err, task) => {
                 if(err) return next(err);
                 return res.status(200).json({status:200, task:task});
+            });
+}
+
+exports.updateTaskFromUser = async (req, res, next) => {
+    // assume that task exists both in user and task collections
+    let task;
+    try{
+        task = await Task.findByIdAndUpdate(
+            req.params.taskId,
+            {$set: req.body},
+            {new:true}
+        );
+        if(task === undefined) throw new Error("Cannot find task"); 
+    } catch(err){
+        return next(err);
+    }
+
+    
+    await User
+            .findByIdAndUpdate(
+                {'_id':req.params.userId,'task_ref':req.params.taskId},
+                {$set: {"tasks": {
+                    title: task.title,
+                    completed: task.completed
+                }}},
+                {new:true}
+            ).exec((err,user) => {
+                if(err) return next(err);
+                return res.status(200).json({status:200, user:user});
             });
 }

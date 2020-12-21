@@ -3,10 +3,12 @@ const mongoose = require('mongoose');
 const {Schema} = mongoose;
 
 const taskSchema = new Schema({
-    taskBody: {
-        type:String,
-        required:true,
+    title: {
+        type: String,
+        default: 'Untitled'
     },
+
+    content: String,
 
     createdDate:{
         type: Date,
